@@ -2,7 +2,7 @@
 
 Use this crate to generate an AUTHORIZATION header for AWS Signature Version 4 services.
 
-
+###Example
 Example usage with reqwest:
 
 ```rust
