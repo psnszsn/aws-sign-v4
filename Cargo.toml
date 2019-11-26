@@ -1,9 +1,10 @@
 [package]
 name = "aws-sign-v4"
-version = "0.1.0"
+version = "0.1.0-1"
 description = "Generate AWS Signature 4 headers easily"
 keywords = ["AWS", "Signature"]
 license = "MIT"
+readme = "README.md"
 authors = ["Vlad Pănăzan <brgdvz@gmail.com>"]
 edition = "2018"
 
