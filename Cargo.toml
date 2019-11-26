@@ -1,0 +1,21 @@
+[package]
+name = "aws-sign-v4"
+version = "0.1.0"
+description = "Generate AWS Signature 4 headers easily"
+keywords = ["AWS", "Signature"]
+license = "MIT"
+authors = ["Vlad Pănăzan <brgdvz@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.10"
+url = "2.1.0"
+hex = "0.4.0"
+ring = "0.16.9"
+http = "0.1.19"
+
+[dev-dependencies]
+reqwest = "0.10.0-alpha.2"
+tokio = "0.2.0-alpha.6"
