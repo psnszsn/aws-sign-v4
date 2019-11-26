@@ -1,8 +1,8 @@
-# aws-sign-s4
+# aws-sign-v4
 
 Use this crate to generate an AUTHORIZATION header for AWS Signature Version 4 services.
 
-###Example
+### Example
 Example usage with reqwest:
 
 ```rust
