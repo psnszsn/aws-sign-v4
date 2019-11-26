@@ -2,6 +2,7 @@
 name = "aws-sign-v4"
 version = "0.1.0-1"
 description = "Generate AWS Signature 4 headers easily"
+repository = "https://github.com/psnszsn/aws-sign-v4"
 keywords = ["AWS", "Signature"]
 license = "MIT"
 readme = "README.md"
