@@ -1,8 +1,9 @@
 # aws-sign-v4
+[![Crates.io](https://img.shields.io/crates/v/aws-sign-v4.svg)](https://crates.io/crates/aws-sign-v4)
 
 Use this crate to generate an AUTHORIZATION header for AWS Signature Version 4 services.
 
-### Example
+## Example
 Example usage with reqwest:
 
 ```rust
