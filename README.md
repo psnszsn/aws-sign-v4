@@ -30,9 +30,11 @@ async fn main() -> Result<(), reqwest::Error> {
     let s = aws_sign_v4::AwsSign::new(
         "GET",
         url,
+        ""
         &datetime,
         &headers,
         "us-east-1",
+        "s3",
         &S3_ACCESS,
         &S3_SECRET,
     );
