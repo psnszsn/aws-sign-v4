@@ -14,8 +14,10 @@ where
 {
     method: &'a str,
     url: Url,
+    payload: &'a str,
     datetime: &'a DateTime<Utc>,
     region: &'a str,
+    service: &'a str,
     access_key: &'a str,
     secret_key: &'a str,
     headers: T,
@@ -25,9 +27,11 @@ impl<'a> AwsSign<'a, HashMap<String, String>> {
     pub fn new(
         method: &'a str,
         url: &'a str,
+        payload: &'a str,
         datetime: &'a DateTime<Utc>,
         headers: &'a HeaderMap,
         region: &'a str,
+        service: &'a str,
         access_key: &'a str,
         secret_key: &'a str,
     ) -> Self {
@@ -45,8 +49,10 @@ impl<'a> AwsSign<'a, HashMap<String, String>> {
         Self {
             method,
             url,
+            payload,
             datetime,
             region,
+            service,
             access_key,
             secret_key,
             headers,
@@ -82,7 +88,8 @@ where
 
     pub fn canonical_request(&'a self) -> String {
         let url: &str = self.url.path().into();
-        let sha256 = "UNSIGNED-PAYLOAD";
+        let payload: &str = self.payload.into();
+        let sha256: &str = &hex::encode(ring::digest::digest(&ring::digest::SHA256, payload.as_bytes()).as_ref());
 
         format!(
             "{method}\n{uri}\n{query_string}\n{headers}\n\n{signed}\n{sha256}",
@@ -96,8 +103,8 @@ where
     }
     pub fn sign(&'a self) -> String {
         let canonical = self.canonical_request();
-        let string_to_sign = string_to_sign(self.datetime, self.region, &canonical);
-        let signing_key = signing_key(self.datetime, self.secret_key, self.region, "s3");
+        let string_to_sign = string_to_sign(self.datetime, self.region, self.service, &canonical);
+        let signing_key = signing_key(self.datetime, self.secret_key, self.region, self.service);
         let key = ring::hmac::Key::new(ring::hmac::HMAC_SHA256, &signing_key.unwrap());
         let tag = ring::hmac::sign(&key, string_to_sign.as_bytes());
         let signature = hex::encode(tag.as_ref());
@@ -107,7 +114,7 @@ where
             "AWS4-HMAC-SHA256 Credential={access_key}/{scope},\
              SignedHeaders={signed_headers},Signature={signature}",
             access_key = self.access_key,
-            scope = scope_string(self.datetime, self.region),
+            scope = scope_string(self.datetime, self.region, self.service),
             signed_headers = signed_headers,
             signature = signature
         )
@@ -144,20 +151,20 @@ pub fn canonical_query_string(uri: &Url) -> String {
     keyvalues.join("&")
 }
 
-pub fn scope_string(datetime: &DateTime<Utc>, region: &str) -> String {
+pub fn scope_string(datetime: &DateTime<Utc>, region: &str, service: &str) -> String {
     format!(
-        "{date}/{region}/s3/aws4_request",
+        "{date}/{region}/{service}/aws4_request",
         date = datetime.format(SHORT_DATE),
         region = region
     )
 }
 
-pub fn string_to_sign(datetime: &DateTime<Utc>, region: &str, canonical_req: &str) -> String {
+pub fn string_to_sign(datetime: &DateTime<Utc>, region: &str, service: &str, canonical_req: &str) -> String {
     let hash = ring::digest::digest(&ring::digest::SHA256, canonical_req.as_bytes());
     format!(
         "AWS4-HMAC-SHA256\n{timestamp}\n{scope}\n{hash}",
         timestamp = datetime.format(LONG_DATETIME),
-        scope = scope_string(datetime, region),
+        scope = scope_string(datetime, region, service),
         hash = hex::encode(hash.as_ref())
     )
 }
