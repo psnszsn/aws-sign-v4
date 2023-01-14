@@ -19,8 +19,39 @@ where
     access_key: &'a str,
     secret_key: &'a str,
     headers: T,
-    service: &'a str, // todo make this optional
-    body: &'a str, // todo make this optional (default to "")
+
+    /* 
+    service is the <aws-service-code> that can be found in the service-quotas api.
+    
+    For example, use the value `ServiceCode` for this `service` property.
+    Thus, for "Amazon Simple Storage Service (Amazon S3)", you would use value "s3"
+
+    ```
+    > aws service-quotas list-services
+    {
+        "Services": [
+            ...
+            {
+                "ServiceCode": "a4b",
+                "ServiceName": "Alexa for Business"
+            },
+            ...
+            {
+                "ServiceCode": "s3",
+                "ServiceName": "Amazon Simple Storage Service (Amazon S3)"
+            },
+            ...
+    ```
+    This is not absolute, so you might need to poke around at the service you're interesed in.
+    See:
+    [AWS General Reference -> Service endpoints and quotas](https://docs.aws.amazon.com/general/latest/gr/aws-service-information.html) - to look up "service" names and codes
+
+    added in 0.2.0
+    */
+    service: &'a str,
+
+    /// body, such as in an http POST
+    body: &'a str,
 }
 
 impl<'a> AwsSign<'a, HashMap<String, String>> {
@@ -158,7 +189,6 @@ pub fn scope_string(datetime: &DateTime<Utc>, region: &str, service: &str) -> St
     )
 }
 
-// todo service must be optional for semver
 pub fn string_to_sign(datetime: &DateTime<Utc>, region: &str, canonical_req: &str, service: &str) -> String {
     let hash = ring::digest::digest(&ring::digest::SHA256, canonical_req.as_bytes());
     format!(
