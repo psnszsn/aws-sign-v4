@@ -7,16 +7,16 @@ keywords = ["AWS", "Signature"]
 license = "MIT"
 readme = "README.md"
 authors = ["Vlad Pănăzan <brgdvz@gmail.com>", "Ken Shih <ken.shih@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4.10"
-url = "2.1.0"
-hex = "0.4.0"
-ring = "0.16.9"
-http = "0.2.0"
+chrono = "0.4.23"
+url = "2.3.1"
+hex = "0.4.3"
+ring = "0.16.20"
+http = "0.2.8"
 sha256 = "1.1.1"
 
 # [dev-dependencies]

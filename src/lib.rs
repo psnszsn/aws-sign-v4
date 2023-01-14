@@ -193,3 +193,29 @@ pub fn signing_key(
     let signing_tag = ring::hmac::sign(&signing_key, b"aws4_request");
     Ok(signing_tag.as_ref().to_vec())
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sample_canonical_request() {
+        let datetime = chrono::Utc::now();
+        let url: &str = "https://hi.s3.us-east-1.amazonaws.com/Prod/graphql";
+        let map: HeaderMap = HeaderMap::new();
+        let aws_sign = AwsSign::new(
+            "GET",
+            url,
+            &datetime,
+            &map,
+            "us-east-1",
+            "a",
+            "b",
+            "s3",
+            ""
+        );
+        let s = aws_sign.canonical_request();
+        assert_eq!(s, "GET\n/Prod/graphql\n\n\n\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+    }
+}
