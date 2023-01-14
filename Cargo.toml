@@ -1,12 +1,12 @@
 [package]
 name = "aws-sign-v4"
-version = "0.1.1"
+version = "0.2.0"
 description = "Generate AWS Signature 4 headers easily"
 repository = "https://github.com/psnszsn/aws-sign-v4"
 keywords = ["AWS", "Signature"]
 license = "MIT"
 readme = "README.md"
-authors = ["Vlad Pănăzan <brgdvz@gmail.com>"]
+authors = ["Vlad Pănăzan <brgdvz@gmail.com>", "Ken Shih <ken.shih@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -17,7 +17,8 @@ url = "2.1.0"
 hex = "0.4.0"
 ring = "0.16.9"
 http = "0.2.0"
+sha256 = "1.1.1"
 
-[dev-dependencies]
-reqwest = "0.10.0"
-tokio = { version = "0.2", features = ["full"] }
+# [dev-dependencies]
+# reqwest = "0.10.0"
+# tokio = { version = "0.2", features = ["full"] }
