@@ -51,11 +51,11 @@ where
     service: &'a str,
 
     /// body, such as in an http POST
-    body: &'a str,
+    body: &'a [u8],
 }
 
 impl<'a> AwsSign<'a, HashMap<String, String>> {
-    pub fn new(
+    pub fn new<B: AsRef<[u8]> + ?Sized>(
         method: &'a str,
         url: &'a str,
         datetime: &'a DateTime<Utc>,
@@ -64,7 +64,7 @@ impl<'a> AwsSign<'a, HashMap<String, String>> {
         access_key: &'a str,
         secret_key: &'a str,
         service: &'a str,
-        body: &'a str,
+        body: &'a B,
     ) -> Self {
         let url: Url = url.parse().unwrap();
         let headers: HashMap<String, String> = headers
@@ -86,7 +86,7 @@ impl<'a> AwsSign<'a, HashMap<String, String>> {
             secret_key,
             headers,
             service,
-            body,
+            body: body.as_ref(),
         }
     }
 }
@@ -235,6 +235,26 @@ mod tests {
         let url: &str = "https://hi.s3.us-east-1.amazonaws.com/Prod/graphql";
         let map: HeaderMap = HeaderMap::new();
         let aws_sign = AwsSign::new(
+            "GET", 
+            url, 
+            &datetime, 
+            &map, 
+            "us-east-1", 
+            "a", 
+            "b", 
+            "s3", 
+            ""
+        );
+        let s = aws_sign.canonical_request();
+        assert_eq!(s, "GET\n/Prod/graphql\n\n\n\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+    }
+
+    #[test]
+    fn sample_canonical_request_using_u8_body() {
+        let datetime = chrono::Utc::now();
+        let url: &str = "https://hi.s3.us-east-1.amazonaws.com/Prod/graphql";
+        let map: HeaderMap = HeaderMap::new();
+        let aws_sign = AwsSign::new(
             "GET",
             url,
             &datetime,
@@ -243,7 +263,28 @@ mod tests {
             "a",
             "b",
             "s3",
-            ""
+            "".as_bytes(),
+        );
+        let s = aws_sign.canonical_request();
+        assert_eq!(s, "GET\n/Prod/graphql\n\n\n\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+    }
+
+    #[test]
+    fn sample_canonical_request_using_vec_body() {
+        let datetime = chrono::Utc::now();
+        let url: &str = "https://hi.s3.us-east-1.amazonaws.com/Prod/graphql";
+        let map: HeaderMap = HeaderMap::new();
+        let body = Vec::new();
+        let aws_sign = AwsSign::new(
+            "GET",
+            url,
+            &datetime,
+            &map,
+            "us-east-1",
+            "a",
+            "b",
+            "s3",
+            &body,
         );
         let s = aws_sign.canonical_request();
         assert_eq!(s, "GET\n/Prod/graphql\n\n\n\n\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
