@@ -1,6 +1,6 @@
 [package]
 name = "aws-sign-v4"
-version = "0.2.0"
+version = "0.3.0"
 description = "Generate AWS Signature 4 headers easily"
 repository = "https://github.com/psnszsn/aws-sign-v4"
 keywords = ["AWS", "Signature"]
