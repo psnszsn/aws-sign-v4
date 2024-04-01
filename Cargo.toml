@@ -12,9 +12,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4.23"
-url = "2.3.1"
+chrono = "0.4.27"
+url = "2.5.0"
 hex = "0.4.3"
-ring = "0.16.20"
-http = "0.2.8"
-sha256 = "1.1.1"
+ring = "0.17.8"
+http = "1.1.0"
+sha256 = "1.5.0"
