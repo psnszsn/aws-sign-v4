@@ -158,11 +158,10 @@ pub fn uri_encode(string: &str, encode_slash: bool) -> String {
             '/' if encode_slash => result.push_str("%2F"),
             '/' if !encode_slash => result.push('/'),
             _ => {
-                result.push('%');
-                result.push_str(
+                                result.push_str(
                     &format!("{}", c)
                         .bytes()
-                        .map(|b| format!("{:02X}", b))
+                        .map(|b| format!("%{:02X}", b))
                         .collect::<String>(),
                 );
             }
